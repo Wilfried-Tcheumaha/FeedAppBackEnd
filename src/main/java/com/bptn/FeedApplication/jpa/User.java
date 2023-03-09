@@ -2,20 +2,33 @@ package com.bptn.FeedApplication.jpa;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-@Entity
-@Table(name = "\"User\"")
-public class User implements Serializable {
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
+
+/**
+ * The persistent class for the "User" database table.
+ * 
+ */
+@Entity
+@Table(name="\"User\"")
+public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -44,6 +57,21 @@ public class User implements Serializable {
 	
 	@Column(name="\"createdOn\"")
 	private Timestamp createdOn;
+
+	@JsonInclude(Include.NON_NULL)
+	@OneToOne(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	private Profile profile;
+
+	@JsonIgnore
+	@OneToMany(mappedBy="user")
+	private List<Feed> feeds;
+
+	@JsonIgnore
+	@OneToMany(mappedBy="user")
+	private List<FeedMetaData> feedMetaData;
+
+	public User() {
+	}
 
 	public Integer getUserId() {
 		return userId;
@@ -117,14 +145,35 @@ public class User implements Serializable {
 		this.createdOn = createdOn;
 	}
 
+	public List<Feed> getFeeds() {
+		return feeds;
+	}
+
+	public void setFeeds(List<Feed> feeds) {
+		this.feeds = feeds;
+	}
+
+	public List<FeedMetaData> getFeedMetaData() {
+		return this.feedMetaData;
+	}
+
+	public void setFeedMetaData(List<FeedMetaData> feedMetaData) {
+		this.feedMetaData = feedMetaData;
+	}
+
+	public Profile getProfile() {
+		return this.profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", username="
 				+ username + ", password=" + password + ", phone=" + phone + ", emailId=" + emailId + ", emailVerified="
 				+ emailVerified + ", createdOn=" + createdOn + "]";
 	}
-	
-	
 
-	
 }

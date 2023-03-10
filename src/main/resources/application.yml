@@ -24,6 +24,20 @@ spring:
     date-format: "yyyy-MM-dd HH:mm:ss" 
     
     
+# Email Settings
+  mail:
+    username: obsidi.academy@gmail.com
+    password: emiyerxmzsipfnpl
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    
     
 # Common Database Settings
   sql:

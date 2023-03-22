@@ -1,5 +1,7 @@
 package com.bptn.feedapp.controller;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -18,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.http.HttpStatus.OK;
-
+import com.bptn.feedapp.jpa.Profile;
 import com.bptn.feedapp.jpa.User;
 import com.bptn.feedapp.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @CrossOrigin(exposedHeaders = "Authorization")
 @RestController
@@ -115,6 +117,38 @@ public class UserController {
 		logger.debug("Sending Reset Password Email, emailId: {}", emailId);
 
 		this.userService.sendResetPasswordEmail(emailId);
+	}
+
+	@PostMapping("/reset")
+	public void passwordReset(@RequestBody JsonNode json) {
+
+		logger.debug("Resetting Password, password: {}", json.get("password").asText());
+
+		this.userService.resetPassword(json.get("password").asText());
+	}
+
+	@GetMapping("/get")
+	public User getUser() {
+
+		logger.debug("Getting User Data");
+
+		return this.userService.getUser();
+	}
+
+	@PostMapping("/update")
+	public User updateUser(@RequestBody User user) {
+
+		logger.debug("Updating User Data");
+
+		return this.userService.updateUser(user);
+	}
+	
+	@PostMapping("/update/profile")
+	public User updateUserProfile(@RequestBody Profile profile) {
+			
+		logger.debug("Updating User Profile Data, Profile: {}", profile.toString());
+			
+		return this.userService.updateUserProfile(profile);
 	}
 
 }
